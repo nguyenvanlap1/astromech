@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Planck.js Collision Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/planck-js@0.3.0/dist/planck.min.js"></script>
+    <style>
+      canvas {
+        background: #eee;
+        display: block;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <script>
+      const pl = planck;
+      const Vec2 = pl.Vec2;
+
+      // Canvas setup
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      ctx.translate(0, canvas.height); // flip Y-axis
+      ctx.scale(20, -20); // world units → pixels
+
+      // World setup
+      const world = new pl.World(Vec2(0, -10));
+
+      // Ground
+      const ground = world.createBody();
+      ground.createFixture(pl.Box(10, 0.5), {});
+
+      // Box 1
+      const box1 = world.createDynamicBody(Vec2(0, 5));
+      box1.createFixture(pl.Box(1, 1), {
+        density: 1.0,
+        friction: 0.3,
+        restitution: 0.5,
+      });
+
+      // Box 2 (dropped slightly above)
+      const box2 = world.createDynamicBody(Vec2(0, 7));
+      box2.createFixture(pl.Box(1, 1), {
+        density: 1.0,
+        friction: 0.3,
+        restitution: 0.5,
+      });
+
+      // Simulation step
+      function update() {
+        world.step(1 / 60, 8, 3); // velocityIterations=8, positionIterations=3
+
+        // Clear canvas
+        ctx.clearRect(-10, -10, 20, 20);
+
+        // Draw boxes
+        [box1, box2].forEach((box) => {
+          const pos = box.getPosition();
+          const angle = box.getAngle();
+          ctx.save();
+          ctx.translate(pos.x, pos.y);
+          ctx.rotate(angle);
+          ctx.fillStyle = "red";
+          ctx.fillRect(-1, -1, 2, 2);
+          ctx.restore();
+        });
+
+        // Draw ground
+        ctx.fillStyle = "green";
+        ctx.fillRect(-10, -0.5, 20, 0.5);
+
+        requestAnimationFrame(update);
+      }
+
+      update();
+    </script>
+  </body>
+</html>

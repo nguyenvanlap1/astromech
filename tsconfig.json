@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    // Output & Source
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "sourceMap": true,
+    "declaration": false,
+    "strict": true,
+
+    // Code Quality
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    // JSX (phòng sau này dùng UI)
+    "jsx": "preserve",
+
+    // Browser env
+    "lib": ["ESNext", "DOM"],
+    "types": [],
+
+    // Performance
+    "skipLibCheck": true
+  },
+
+  // Tự thêm file TS khi chuyển dần
+  "include": ["src"]
+}
