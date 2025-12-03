@@ -53,7 +53,8 @@ export class SpaceObjectManager {
 
       const { x: mouseX, y: mouseY } = this.camera.screenToWorld(
         canvasX,
-        canvasY
+        canvasY,
+        Space.canvas!
       );
 
       // Bỏ chọn tất cả trước

@@ -1,14 +1,13 @@
 export class Camera {
   private static instance: Camera | null = null;
 
-  private scale: number = 30;
-  private minScale: number = 0.1;
-  private maxScale: number = 200;
-  private zoomStep: number = 1.1;
-
-  // Camera offset
-  private offsetX: number = 0;
-  private offsetY: number = 0;
+  x: number = 0; // tọa độ world
+  y: number = 0;
+  rotation: number = 0; // radian
+  scale: number = 30;
+  minScale: number = 0.1;
+  maxScale: number = 200;
+  zoomStep: number = 1.1;
 
   private isDragging: boolean = false;
   private dragStartX: number = 0;
@@ -23,52 +22,73 @@ export class Camera {
     return this.instance;
   }
 
-  /* =====================
-          SCALE (ZOOM)
-     ===================== */
-  setScale(newScale: number): void {
+  setScale(newScale: number) {
     this.scale = Math.min(this.maxScale, Math.max(this.minScale, newScale));
   }
 
-  getScale(): number {
-    return this.scale;
-  }
-
-  zoom(deltaY: number): void {
+  zoom(deltaY: number) {
     if (deltaY < 0) this.scale *= this.zoomStep;
     else this.scale /= this.zoomStep;
-
     this.scale = Math.min(this.maxScale, Math.max(this.minScale, this.scale));
   }
 
-  addZoomScale(): void {
-    window.addEventListener("wheel", (e) => {
-      this.zoom(e.deltaY);
-    });
+  // Chuyển đổi screen -> world
+  screenToWorld(screenX: number, screenY: number, canvas: HTMLCanvasElement) {
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+
+    // Dịch sang origin, xoay ngược lại camera, chia scale
+    const dx = screenX - cx;
+    const dy = screenY - cy;
+
+    const cosR = Math.cos(-this.rotation);
+    const sinR = Math.sin(-this.rotation);
+
+    const worldX = (dx * cosR - dy * sinR) / this.scale + this.x;
+    const worldY = (dx * sinR + dy * cosR) / this.scale + this.y;
+    return { x: worldX, y: worldY };
   }
 
-  /* =====================
-        CAMERA OFFSET
-     ===================== */
-  getOffsetX() {
-    return this.offsetX;
+  // Chuyển đổi world -> screen
+  worldToScreen(worldX: number, worldY: number, canvas: HTMLCanvasElement) {
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+
+    const dx = (worldX - this.x) * this.scale;
+    const dy = (worldY - this.y) * this.scale;
+
+    const cosR = Math.cos(this.rotation);
+    const sinR = Math.sin(this.rotation);
+
+    const screenX = dx * cosR - dy * sinR + cx;
+    const screenY = dx * sinR + dy * cosR + cy;
+
+    return { x: screenX, y: screenY };
   }
 
-  getOffsetY() {
-    return this.offsetY;
-  }
-
-  addDragControl(canvas: HTMLCanvasElement): void {
+  // Thêm pan (rê chuột)
+  addDragControl(canvas: HTMLCanvasElement) {
     canvas.addEventListener("mousedown", (e) => {
       this.isDragging = true;
-      this.dragStartX = e.clientX - this.offsetX;
-      this.dragStartY = e.clientY - this.offsetY;
+      this.dragStartX = e.clientX;
+      this.dragStartY = e.clientY;
     });
 
     canvas.addEventListener("mousemove", (e) => {
       if (!this.isDragging) return;
-      this.offsetX = e.clientX - this.dragStartX;
-      this.offsetY = e.clientY - this.dragStartY;
+
+      const dx = (e.clientX - this.dragStartX) / this.scale;
+      const dy = (e.clientY - this.dragStartY) / this.scale;
+
+      const cosR = Math.cos(-this.rotation);
+      const sinR = Math.sin(-this.rotation);
+
+      // Chuyển dx, dy theo hướng camera
+      this.x -= dx * cosR - dy * sinR;
+      this.y -= dx * sinR + dy * cosR;
+
+      this.dragStartX = e.clientX;
+      this.dragStartY = e.clientY;
     });
 
     window.addEventListener("mouseup", () => {
@@ -76,11 +96,7 @@ export class Camera {
     });
   }
 
-  // screenX, screenY: tọa độ trong canvas (pixels), ví dụ e.clientX - rect.left
-  screenToWorld(screenX: number, screenY: number) {
-    const scale = this.getScale();
-    const worldX = (screenX - this.getOffsetX()) / scale;
-    const worldY = (screenY - this.getOffsetY()) / scale;
-    return { x: worldX, y: worldY };
+  addZoomScale() {
+    window.addEventListener("wheel", (e) => this.zoom(e.deltaY));
   }
 }

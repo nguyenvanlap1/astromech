@@ -68,19 +68,32 @@ spaceObjectManager.add(tankC);
 spaceObjectManager.add(tankD);
 // camera.followTarget(tankB.body);
 camera.addZoomScale();
-camera.addDragControl(Space.canvas);
+camera.addDragControl(Space.canvas!);
 spaceObjectManager.addMouseDown();
 // Loop vật lý + vẽ
 function loop() {
-  Space.world?.step(1 / 60, 12, 24); // positionIterations cao hơn để tránh ăn nhau
-  // camera.update();
-  Space.ctx?.clearRect(0, 0, Space.canvas.width, Space.canvas.height);
-  Space.ctx?.save(); // Lưu lại state gốc
-  Space.ctx?.translate(camera.getOffsetX(), camera.getOffsetY());
-  Space.ctx?.scale(camera.getScale(), camera.getScale());
-  // Space.ctx?.rotate(-camera.getRotation()); // 👈 xoay ngược hệ trục để camera xoay đúng logic
-  spaceObjectManager.draw(Space.ctx);
-  Space.ctx?.restore();
+  Space.world?.step(1 / 60, 12, 24);
+
+  Space.ctx?.clearRect(0, 0, Space.canvas!.width, Space.canvas!.height);
+  Space.ctx?.save(); // Lưu state gốc
+
+  const cx = Space.canvas!.width / 2;
+  const cy = Space.canvas!.height / 2;
+
+  // 1️⃣ Dịch tâm canvas về giữa màn hình
+  Space.ctx?.translate(cx, cy);
+
+  // 2️⃣ Scale + rotate camera
+  Space.ctx?.scale(camera.scale, camera.scale);
+  Space.ctx?.rotate(-camera.rotation);
+
+  // 3️⃣ Dịch toàn bộ thế giới để (camera.x, camera.y) trùng tâm
+  Space.ctx?.translate(-camera.x, -camera.y);
+
+  // 4️⃣ Vẽ tất cả object bình thường theo tọa độ world
+  spaceObjectManager.draw(Space.ctx!);
+
+  Space.ctx?.restore(); // Trả lại state gốc
   requestAnimationFrame(loop);
 }
 
