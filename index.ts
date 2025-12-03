@@ -66,13 +66,14 @@ spaceObjectManager.add(tankA);
 spaceObjectManager.add(tankB);
 spaceObjectManager.add(tankC);
 spaceObjectManager.add(tankD);
-// camera.followTarget(tankB.body);
+camera.setFollowingBody(tankD.body);
 camera.addZoomScale();
 camera.addDragControl(Space.canvas!);
 spaceObjectManager.addMouseDown();
 // Loop vật lý + vẽ
 function loop() {
   Space.world?.step(1 / 60, 12, 24);
+  camera.updateFollowing();
 
   Space.ctx?.clearRect(0, 0, Space.canvas!.width, Space.canvas!.height);
   Space.ctx?.save(); // Lưu state gốc

@@ -1,3 +1,5 @@
+import planck from "planck-js";
+
 export class Camera {
   private static instance: Camera | null = null;
 
@@ -8,6 +10,7 @@ export class Camera {
   minScale: number = 0.1;
   maxScale: number = 200;
   zoomStep: number = 1.1;
+  followingBody: planck.Body | null = null;
 
   private isDragging: boolean = false;
   private dragStartX: number = 0;
@@ -98,5 +101,22 @@ export class Camera {
 
   addZoomScale() {
     window.addEventListener("wheel", (e) => this.zoom(e.deltaY));
+  }
+
+  // FOLLOWING BODY
+
+  setFollowingBody(body: planck.Body) {
+    this.followingBody = body;
+  }
+
+  removeFollowingBody() {
+    this.followingBody = null;
+  }
+
+  updateFollowing() {
+    if (!this.followingBody) return;
+    this.x = this.followingBody.getPosition().x;
+    this.y = this.followingBody.getPosition().y;
+    this.rotation = this.followingBody.getAngle();
   }
 }
