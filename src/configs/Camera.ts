@@ -1,8 +1,7 @@
-import { GameConfig } from "./GameConfig";
 export class Camera {
   private static instance: Camera | null = null;
 
-  private scale: number = 1;
+  private scale: number = 30;
   private minScale: number = 0.1;
   private maxScale: number = 200;
   private zoomStep: number = 1.1;
@@ -14,7 +13,6 @@ export class Camera {
   private isDragging: boolean = false;
   private dragStartX: number = 0;
   private dragStartY: number = 0;
-  private gameConfig: GameConfig = GameConfig.getInstance();
 
   private constructor() {}
 
@@ -81,10 +79,8 @@ export class Camera {
   // screenX, screenY: tọa độ trong canvas (pixels), ví dụ e.clientX - rect.left
   screenToWorld(screenX: number, screenY: number) {
     const scale = this.getScale();
-    const worldX =
-      (screenX - this.getOffsetX()) / (scale * this.gameConfig.getScale());
-    const worldY =
-      (screenY - this.getOffsetY()) / (scale * this.gameConfig.getScale());
+    const worldX = (screenX - this.getOffsetX()) / scale;
+    const worldY = (screenY - this.getOffsetY()) / scale;
     return { x: worldX, y: worldY };
   }
 }

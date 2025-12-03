@@ -50,30 +50,22 @@ export class FuelTank extends ShipModule {
     const angle = this.body.getAngle();
 
     ctx.save();
-    ctx.translate(
-      pos.x * this.gameConfig.getScale(),
-      pos.y * this.gameConfig.getScale()
-    );
+    ctx.translate(pos.x, pos.y);
     ctx.rotate(angle); // xoay quanh tâm body
 
     // Vẽ thân
     ctx.fillStyle = "lime";
-    ctx.fillRect(
-      (-this.width / 2) * this.gameConfig.getScale(),
-      (-this.height / 2) * this.gameConfig.getScale(),
-      this.width * this.gameConfig.getScale(),
-      this.height * this.gameConfig.getScale()
-    );
+    ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
 
     // ✨ Nếu đang được chọn → vẽ viền vàng đậm
     if (this.isSelected) {
       ctx.strokeStyle = "yellow";
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 0.1;
       ctx.strokeRect(
-        (-this.width / 2) * this.gameConfig.getScale(),
-        (-this.height / 2) * this.gameConfig.getScale(),
-        this.width * this.gameConfig.getScale(),
-        this.height * this.gameConfig.getScale()
+        -this.width / 2,
+        -this.height / 2,
+        this.width,
+        this.height
       );
     }
 
@@ -81,13 +73,7 @@ export class FuelTank extends ShipModule {
     ctx.fillStyle = "red";
     for (const a of Object.values(this.anchors)) {
       ctx.beginPath();
-      ctx.arc(
-        a.x * this.gameConfig.getScale(),
-        a.y * this.gameConfig.getScale(),
-        4,
-        0,
-        Math.PI * 2
-      );
+      ctx.arc(a.x, a.y, 0.1, 0, Math.PI * 2);
       ctx.fill();
     }
 

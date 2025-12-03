@@ -1,7 +1,7 @@
 export class GameConfig {
   private static instance: GameConfig | null = null;
 
-  private scale: number = 30;
+  private scale: number = 1;
 
   private constructor() {}
 
@@ -15,11 +15,11 @@ export class GameConfig {
   /* =====================
           SCALE (ZOOM)
      ===================== */
-  setScale(newScale: number): void {
-    this.scale = newScale;
-  }
+  // setScale(newScale: number): void {
+  //   this.scale = newScale;
+  // }
 
-  getScale(): number {
-    return this.scale;
-  }
+  // getScale(): number {
+  //   return this.scale;
+  // }
 }

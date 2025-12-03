@@ -1,5 +1,4 @@
 import planck, { World } from "planck-js";
-import { GameConfig } from "./configs/GameConfig";
 
 export class SpaceObject {
   world: World;
@@ -8,7 +7,6 @@ export class SpaceObject {
   width: number;
   height: number;
   body: planck.Body;
-  gameConfig: GameConfig;
   /**
    * Lớp cơ bản cho mọi module của tàu
    * @param {planck.World} world
@@ -18,7 +16,6 @@ export class SpaceObject {
    */
   constructor(world: planck.World, { x = 0, y = 0, angleDeg = 0 } = {}) {
     this.world = world;
-    this.gameConfig = GameConfig.getInstance();
     this.isSelected = false;
     this.isDraggable = true; // Cho phép kéo thả khi ở chế độ chế tạo tàu
     // Hitbox mặc định: hình chữ nhật 1x1m (override trong subclasses)

@@ -56,13 +56,20 @@ export class SpaceObjectManager {
         canvasY
       );
 
-      for (const spaceObject of this.spaceObjects) {
-        spaceObject.setSelected(false);
-        if (spaceObject.containsPoint(mouseX, mouseY)) {
-          spaceObject.setSelected(true);
-          this.selectedSpaceObject = spaceObject;
-          break;
-        }
+      // Bỏ chọn tất cả trước
+      for (const obj of this.spaceObjects) {
+        obj.setSelected(false);
+      }
+
+      // Chọn object đầu tiên chứa point
+      const selected = this.spaceObjects.find((obj) =>
+        obj.containsPoint(mouseX, mouseY)
+      );
+      if (selected) {
+        selected.setSelected(true);
+        this.selectedSpaceObject = selected;
+      } else {
+        this.selectedSpaceObject = null;
       }
     });
   }
