@@ -2,6 +2,8 @@
 <html lang="vi">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>AstroMech</title>
     <style>
       html,
@@ -11,6 +13,11 @@
         overflow: hidden;
         background: #000;
       }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
       canvas {
         display: block;
       }
@@ -18,8 +25,8 @@
   </head>
   <body>
     <canvas id="space"></canvas>
-
+    <div id="ui-root"></div>
     <!-- Chỉ còn file này thôi -->
-    <script type="module" src="index.js"></script>
+    <script type="module" src="main.ts"></script>
   </body>
 </html>

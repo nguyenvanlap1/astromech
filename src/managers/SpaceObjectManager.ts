@@ -1,12 +1,12 @@
 import planck from "planck-js";
 import { SpaceObject } from "../SpaceObject";
 import { Space } from "../Space";
-import { GameConfig } from "../configs/GameConfig";
 import { Camera } from "../configs/Camera";
+import { AnchorManager } from "./Anchor.Manager";
 
 export class SpaceObjectManager {
   private static instance: SpaceObjectManager | null = null;
-  gameConfig: GameConfig;
+  anchorManager: AnchorManager;
   camera: Camera;
   world: planck.World;
   spaceObjects: SpaceObject[] = [];
@@ -14,8 +14,8 @@ export class SpaceObjectManager {
 
   private constructor(world: planck.World) {
     this.world = world;
-    this.gameConfig = GameConfig.getInstance();
     this.camera = Camera.getInstance();
+    this.anchorManager = AnchorManager.getInstance();
   }
 
   static getInstance(world?: planck.World) {
@@ -31,6 +31,10 @@ export class SpaceObjectManager {
 
   add(module: SpaceObject) {
     this.spaceObjects.push(module);
+    for (const a of Object.values(module.anchors!)) {
+      this.anchorManager.add(a);
+    }
+    this.anchorManager;
   }
 
   remove(module: SpaceObject) {

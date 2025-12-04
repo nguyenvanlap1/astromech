@@ -3,7 +3,6 @@ import { ShipModule } from "./ShipModule";
 import { Anchor } from "./Anchor";
 
 export class FuelTank extends ShipModule {
-  anchors: Record<string, Anchor>;
   constructor(
     world: planck.World,
     {
@@ -70,11 +69,8 @@ export class FuelTank extends ShipModule {
     }
 
     // Vẽ anchor points
-    ctx.fillStyle = "red";
-    for (const a of Object.values(this.anchors)) {
-      ctx.beginPath();
-      ctx.arc(a.x, a.y, 0.1, 0, Math.PI * 2);
-      ctx.fill();
+    for (const a of Object.values(this.anchors!)) {
+      a.draw(ctx);
     }
 
     ctx.restore();

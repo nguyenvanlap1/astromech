@@ -1,6 +1,9 @@
 import planck, { World } from "planck-js";
+import { Anchor } from "./ShipModules/Anchor";
 
 export class SpaceObject {
+  anchors: Record<string, Anchor> | null = null;
+  type: String | null = null;
   world: World;
   isSelected: boolean;
   isDraggable: boolean;
@@ -14,7 +17,12 @@ export class SpaceObject {
    *   x, y: vị trí ban đầu (m)
    *   angleDeg: góc nghiêng ban đầu (°)
    */
-  constructor(world: planck.World, { x = 0, y = 0, angleDeg = 0 } = {}) {
+  constructor(
+    world: planck.World,
+    { x = 0, y = 0, angleDeg = 0 } = {},
+    type: String
+  ) {
+    this.type = type;
     this.world = world;
     this.isSelected = false;
     this.isDraggable = true; // Cho phép kéo thả khi ở chế độ chế tạo tàu

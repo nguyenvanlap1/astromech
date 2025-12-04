@@ -29,6 +29,7 @@ const tankB = new FuelTank(Space.world, {
 
 // Joint nhẹ, không ép mạnh
 tankA.anchors.front.connect(tankB.anchors.front);
+tankA.anchors.back.connect(tankB.anchors.back);
 
 // Tạo thùng thứ 3 bay về phía 2 thùng
 const tankC = new FuelTank(Space.world, {
@@ -66,10 +67,11 @@ spaceObjectManager.add(tankA);
 spaceObjectManager.add(tankB);
 spaceObjectManager.add(tankC);
 spaceObjectManager.add(tankD);
-camera.setFollowingBody(tankD.body);
+// camera.setFollowingBody(tankA.body);
 camera.addZoomScale();
 camera.addDragControl(Space.canvas!);
 spaceObjectManager.addMouseDown();
+spaceObjectManager.anchorManager.addMouseDown();
 // Loop vật lý + vẽ
 function loop() {
   Space.world?.step(1 / 60, 12, 24);
